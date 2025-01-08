@@ -8,29 +8,28 @@ Disk disk_run;
 BlockBuffer::BlockBuffer(int blockNum)
 {
     // initialise this.blockNum with the argument
-    this->blockNum=blockNum;
+    this->blockNum = blockNum;
 }
 
 // calls the parent class constructor
-RecBuffer::RecBuffer(int blockNum) : BlockBuffer::BlockBuffer(blockNum) {
-
+RecBuffer::RecBuffer(int blockNum) : BlockBuffer::BlockBuffer(blockNum)
+{
 }
 
 // load the block header into the argument pointer
 int BlockBuffer::getHeader(struct HeadInfo *head)
 {
     unsigned char buffer[BLOCK_SIZE];
-    Disk::readBlock(buffer,this->blockNum);
+    Disk::readBlock(buffer, this->blockNum);
     // read the block at this.blockNum into the buffer
 
     // populate the numEntries, numAttrs and numSlots fields in *head
-    memcpy (&head->pblock,buffer+4,4);
-    memcpy(&head->lblock, buffer+8, 4);
-    memcpy(&head->rblock, buffer+12, 4);
-    memcpy(&head->numEntries, buffer+16, 4);
-    memcpy(&head->numAttrs,buffer+20, 4);
+    memcpy(&head->pblock, buffer + 4, 4);
+    memcpy(&head->lblock, buffer + 8, 4);
+    memcpy(&head->rblock, buffer + 12, 4);
+    memcpy(&head->numEntries, buffer + 16, 4);
+    memcpy(&head->numAttrs, buffer + 20, 4);
     memcpy(&head->numSlots, buffer + 24, 4);
-
 
     return SUCCESS;
 }
@@ -45,7 +44,7 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum)
     int attrCount = head.numAttrs;
     int slotCount = head.numSlots;
     unsigned char buffer[BLOCK_SIZE];
-    Disk::readBlock(buffer,this->blockNum);
+    Disk::readBlock(buffer, this->blockNum);
     // read the block at this.blockNum into a buffer
 
     /* record at slotNum will be at offset HEADER_SIZE + slotMapSize + (recordSize * slotNum)
@@ -53,8 +52,8 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum)
        - slotMap will be of size slotCount
     */
     int recordSize = attrCount * ATTR_SIZE;
-    int slotMapSize=slotCount;
-    unsigned char *slotPointer = buffer + (HEADER_SIZE+slotMapSize+(recordSize*slotNum));/*calculate buffer + offset */
+    int slotMapSize = slotCount;
+    unsigned char *slotPointer = buffer + (HEADER_SIZE + slotMapSize + (recordSize * slotNum)); /*calculate buffer + offset */
 
     // load the record into the rec data structure
     memcpy(rec, slotPointer, recordSize);

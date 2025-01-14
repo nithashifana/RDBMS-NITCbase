@@ -56,12 +56,57 @@ void stage2()
 
     printf("Relation: %s\n", relCatRecord[RELCAT_REL_NAME_INDEX].sVal);
 
+    
+      for (int j = 0; j < attrCatHeader.numEntries; j++ /* j = 0 to number of entries in the attribute catalog */)
+      {
+
+        Attribute attrCatRecord[ATTRCAT_NO_ATTRS];
+        attrCatBuffer.getRecord(attrCatRecord, j);
+
+        // declare attrCatRecord and load the attribute catalog entry into it
+
+        if (strcmp(attrCatRecord[ATTRCAT_REL_NAME_INDEX].sVal, relCatRecord[RELCAT_REL_NAME_INDEX].sVal) == 0 /* attribute catalog entry corresponds to the current relation */)
+        {
+          const char *attrType = attrCatRecord[ATTRCAT_ATTR_TYPE_INDEX].nVal == NUMBER ? "NUM" : "STR";
+          printf("  %s: %s\n", attrCatRecord[ATTRCAT_ATTR_NAME_INDEX].sVal /* get the attribute name */, attrType);
+        }
+      
+    }
+    printf("\n");
+  }
+}
+
+// STAGE 2 Excercise
+void S2Exercise1()
+{
+  // create objects for the relation catalog and attribute catalog
+  RecBuffer relCatBuffer(RELCAT_BLOCK);
+  RecBuffer attrCatBuffer(ATTRCAT_BLOCK);
+
+  HeadInfo relCatHeader;
+  HeadInfo attrCatHeader;
+
+  // load the headers of both the blocks into relCatHeader and attrCatHeader.
+  // (we will implement these functions later)
+  relCatBuffer.getHeader(&relCatHeader);
+  attrCatBuffer.getHeader(&attrCatHeader);
+
+  for (int i = 0; i < relCatHeader.numEntries; i++ /* i = 0 to total relation count */)
+  {
+
+    Attribute relCatRecord[RELCAT_NO_ATTRS]; // will store the record from the relation catalog
+
+    relCatBuffer.getRecord(relCatRecord, i);
+
+    printf("Relation: %s\n", relCatRecord[RELCAT_REL_NAME_INDEX].sVal);
+
     int headerNum = ATTRCAT_BLOCK;
     while (headerNum != -1)
     {
       RecBuffer attrCatBuffer(headerNum);
       attrCatBuffer.getHeader(&attrCatHeader);
 
+    
       for (int j = 0; j < attrCatHeader.numEntries; j++ /* j = 0 to number of entries in the attribute catalog */)
       {
 
@@ -82,10 +127,54 @@ void stage2()
   }
 }
 
-// STAGE 2 Excercise
-void S2Exercise()
-{
+void S2Exercise2() {
+  
+  // create objects for the relation catalog and attribute catalog
+  RecBuffer relCatBuffer(RELCAT_BLOCK);
+  RecBuffer attrCatBuffer(ATTRCAT_BLOCK);
+
+  HeadInfo relCatHeader;
+  HeadInfo attrCatHeader;
+
+  // load the headers of both the blocks into relCatHeader and attrCatHeader.
+  // (we will implement these functions later)
+  relCatBuffer.getHeader(&relCatHeader);
+  attrCatBuffer.getHeader(&attrCatHeader);
+
+  for (int i = 0; i < relCatHeader.numEntries; i++ /* i = 0 to total relation count */)
+  {
+
+    Attribute relCatRecord[RELCAT_NO_ATTRS]; // will store the record from the relation catalog
+
+    relCatBuffer.getRecord(relCatRecord, i);
+
+    printf("Relation: %s\n", relCatRecord[RELCAT_REL_NAME_INDEX].sVal);
+
+    for (int j = 0; j < attrCatHeader.numEntries; j++ /* j = 0 to number of entries in the attribute catalog */)
+    {
+
+      Attribute attrCatRecord[ATTRCAT_NO_ATTRS];
+      attrCatBuffer.getRecord(attrCatRecord, j);
+
+      // declare attrCatRecord and load the attribute catalog entry into it
+
+      if (strcmp(attrCatRecord[ATTRCAT_REL_NAME_INDEX].sVal, relCatRecord[RELCAT_REL_NAME_INDEX].sVal) == 0 /* attribute catalog entry corresponds to the current relation */)
+      {
+        const char *attrType = attrCatRecord[ATTRCAT_ATTR_TYPE_INDEX].nVal == NUMBER ? "NUM" : "STR";
+        if (strcmp(attrCatRecord[ATTRCAT_REL_NAME_INDEX].sVal, "Students") == 0 &&
+            strcmp(attrCatRecord[ATTRCAT_ATTR_NAME_INDEX].sVal, "Class") == 0)
+        {
+          printf("  Batch: %s\n", attrType);
+          memcpy(attrCatRecord[ATTRCAT_ATTR_NAME_INDEX].sVal, "Batch", strlen("Batch") + 1);
+        }
+        else
+        printf("  %s: %s\n", attrCatRecord[ATTRCAT_ATTR_NAME_INDEX].sVal /* get the attribute name */, attrType);
+      }
+    }
+    printf("\n");
+  }
 }
+
 
 void stage3()
 {
@@ -120,14 +209,18 @@ void stage3()
 int main(int argc, char *argv[])
 {
   /* Initialize the Run Copy of Disk */
-  Disk disk_run;
+  //Disk disk_run;
+
   // stage1();
   //  S1Exercise (buffer);
 
   // stage2();
+  // S2Exercise1();
+  // S2Exercise2();
+
   StaticBuffer buffer;
   OpenRelTable cache;
   stage3();
   // return FrontendInterface::handleFrontend(argc, argv);
-  // return 0;
+  return 0;
 }

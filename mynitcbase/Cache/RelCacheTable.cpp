@@ -2,19 +2,22 @@
 
 #include <cstring>
 
-RelCacheEntry* RelCacheTable::relCache[MAX_OPEN];
+RelCacheEntry *RelCacheTable::relCache[MAX_OPEN];
 
 /*
 Get the relation catalog entry for the relation with rel-id `relId` from the cache
 NOTE: this function expects the caller to allocate memory for `*relCatBuf`
 */
-int RelCacheTable::getRelCatEntry(int relId, RelCatEntry* relCatBuf) {
-  if (relId < 0 || relId >= MAX_OPEN) {
+int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf)
+{
+  if (relId < 0 || relId >= MAX_OPEN)
+  {
     return E_OUTOFBOUND;
   }
 
   // if there's no entry at the rel-id
-  if (relCache[relId] == nullptr) {
+  if (relCache[relId] == nullptr)
+  {
     return E_RELNOTOPEN;
   }
 
@@ -30,7 +33,8 @@ int RelCacheTable::getRelCatEntry(int relId, RelCatEntry* relCatBuf) {
 NOTE: this function expects the caller to allocate memory for `*relCatEntry`
 */
 void RelCacheTable::recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS],
-                                        RelCatEntry* relCatEntry) {
+                                        RelCatEntry *relCatEntry)
+{
   strcpy(relCatEntry->relName, record[RELCAT_REL_NAME_INDEX].sVal);
   relCatEntry->numAttrs = (int)record[RELCAT_NO_ATTRIBUTES_INDEX].nVal;
 
@@ -41,9 +45,8 @@ void RelCacheTable::recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS],
       RELCAT_NO_SLOTS_PER_BLOCK_INDEX
   */
 
-    relCatEntry->firstBlk = (int)record[RELCAT_FIRST_BLOCK_INDEX].nVal;
-    relCatEntry->lastBlk = (int)record[RELCAT_LAST_BLOCK_INDEX].nVal;
-    relCatEntry->numRecs = (int)record[RELCAT_NO_ATTRIBUTES_INDEX].nVal;
-    relCatEntry->numSlotsPerBlk = (int)record[RELCAT_NO_SLOTS_PER_BLOCK_INDEX].nVal;
-
+  relCatEntry->firstBlk = (int)record[RELCAT_FIRST_BLOCK_INDEX].nVal;
+  relCatEntry->lastBlk = (int)record[RELCAT_LAST_BLOCK_INDEX].nVal;
+  relCatEntry->numRecs = (int)record[RELCAT_NO_ATTRIBUTES_INDEX].nVal;
+  relCatEntry->numSlotsPerBlk = (int)record[RELCAT_NO_SLOTS_PER_BLOCK_INDEX].nVal;
 }

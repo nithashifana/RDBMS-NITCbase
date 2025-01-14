@@ -30,8 +30,10 @@ int StaticBuffer::getFreeBuffer(int blockNum)
     }
     int allocatedBuffer;
 
-    for(int bufferIndex = 0; bufferIndex < BUFFER_CAPACITY; bufferIndex ++) {
-        if(metainfo[bufferIndex].free == true) {
+    for (int bufferIndex = 0; bufferIndex < BUFFER_CAPACITY; bufferIndex++)
+    {
+        if (metainfo[bufferIndex].free == true)
+        {
             allocatedBuffer = bufferIndex;
             break;
         }
@@ -51,15 +53,18 @@ int StaticBuffer::getFreeBuffer(int blockNum)
    or E_BLOCKNOTINBUFFER otherwise
 */
 int StaticBuffer::getBufferNum(int blockNum)
-{   
-    if(blockNum < 0 || blockNum > DISK_BLOCKS) {
+{
+    if (blockNum < 0 || blockNum > DISK_BLOCKS)
+    {
         return E_OUTOFBOUND;
     }
     // Check if blockNum is valid (between zero and DISK_BLOCKS)
     // and return E_OUTOFBOUND if not valid.
 
-    for(int bufferIndex = 0; bufferIndex < BUFFER_CAPACITY; bufferIndex ++) {
-        if(metainfo[bufferIndex].blockNum == blockNum) {
+    for (int bufferIndex = 0; bufferIndex < BUFFER_CAPACITY; bufferIndex++)
+    {
+        if (metainfo[bufferIndex].blockNum == blockNum)
+        {
             return bufferIndex;
         }
     }

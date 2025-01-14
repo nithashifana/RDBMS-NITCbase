@@ -112,27 +112,58 @@ OpenRelTable::OpenRelTable()
     AttrCacheTable::attrCache[ATTRCAT_RELID] = attrCacheEntry;
 
     // set the value at AttrCacheTable::attrCache[ATTRCAT_RELID]
+
+    // S3Exercise
+
+    attrCacheEntry = new AttrCacheEntry;
+    temp = attrCacheEntry;
+
+    // // read slots 12-15 from attrCatBlock and initialise recId appropriately
+    // for (int i = 12; i < 16; i++)
+    // {
+    //     // list of AttrCacheEntry (slots 0 to 5)
+    //     attrCatBlock.getRecord(attrCatRecord, i);
+
+    //     // for each of the entries, set
+    //     AttrCacheTable::recordToAttrCatEntry(attrCatRecord, &temp->attrCatEntry);
+    //     temp->recId.block = ATTRCAT_BLOCK;
+    //     temp->recId.slot = i;
+
+    //     if (i < 15)
+    //         temp->next = new AttrCacheEntry;
+    //     else
+    //         temp->next = nullptr;
+
+    //     temp = temp->next;
+    // }
+
+    // set the value at AttrCacheTable::attrCache[2]
+    AttrCacheTable::attrCache[2] = attrCacheEntry;
 }
 
-OpenRelTable::~OpenRelTable() {
-  // free all the memory that you allocated in the constructor
-   if (RelCacheTable::relCache[RELCAT_RELID]) {
-    free(RelCacheTable::relCache[RELCAT_RELID]);
-  }
+OpenRelTable::~OpenRelTable()
+{
+    // free all the memory that you allocated in the constructor
+    if (RelCacheTable::relCache[RELCAT_RELID])
+    {
+        free(RelCacheTable::relCache[RELCAT_RELID]);
+    }
 
-  // Free memory for Attribute Cache entries for RELCAT_RELID
-  struct AttrCacheEntry* current = AttrCacheTable::attrCache[RELCAT_RELID];
-  while (current) {
-    struct AttrCacheEntry* next = current->next;
-    free(current);
-    current = next;
-  }
+    // Free memory for Attribute Cache entries for RELCAT_RELID
+    struct AttrCacheEntry *current = AttrCacheTable::attrCache[RELCAT_RELID];
+    while (current)
+    {
+        struct AttrCacheEntry *next = current->next;
+        free(current);
+        current = next;
+    }
 
-  // Free memory for Attribute Cache entries for ATTRCAT_RELID
-  current = AttrCacheTable::attrCache[ATTRCAT_RELID];
-  while (current) {
-    struct AttrCacheEntry* next = current->next;
-    free(current);
-    current = next;
-  }
+    // Free memory for Attribute Cache entries for ATTRCAT_RELID
+    current = AttrCacheTable::attrCache[ATTRCAT_RELID];
+    while (current)
+    {
+        struct AttrCacheEntry *next = current->next;
+        free(current);
+        current = next;
+    }
 }

@@ -27,6 +27,8 @@ OpenRelTable::OpenRelTable()
     relCacheEntry.recId.block = RELCAT_BLOCK;
     relCacheEntry.recId.slot = RELCAT_SLOTNUM_FOR_RELCAT;
 
+
+
     // allocate this on the heap because we want it to persist outside this function
     RelCacheTable::relCache[RELCAT_RELID] = (struct RelCacheEntry *)malloc(sizeof(RelCacheEntry));
     *(RelCacheTable::relCache[RELCAT_RELID]) = relCacheEntry;
@@ -61,6 +63,19 @@ OpenRelTable::OpenRelTable()
     //    attrCacheEntry.recId.slot = i   (0 to 5)
     //    and attrCacheEntry.next appropriately
     // NOTE: allocate each entry dynamically using malloc
+
+
+    Attribute stuCatRecord[4];
+    relCatBlock.getRecord(stuCatRecord, 2);
+
+    struct RelCacheEntry stuCacheEntry;
+    RelCacheTable::recordToRelCatEntry(stuCatRecord, &stuCacheEntry.relCatEntry);
+    relCacheEntry.recId.block = RELCAT_BLOCK;
+    relCacheEntry.recId.slot = 2;
+
+    // allocate this on the heap because we want it to persist outside this function
+    RelCacheTable::relCache[2] = (struct RelCacheEntry *)malloc(sizeof(RelCacheEntry));
+    *(RelCacheTable::relCache[2]) = stuCacheEntry;
 
     struct AttrCacheEntry *attrCacheEntry = new AttrCacheEntry;
     struct AttrCacheEntry *temp = attrCacheEntry;
@@ -118,24 +133,24 @@ OpenRelTable::OpenRelTable()
     attrCacheEntry = new AttrCacheEntry;
     temp = attrCacheEntry;
 
-    // // read slots 12-15 from attrCatBlock and initialise recId appropriately
-    // for (int i = 12; i < 16; i++)
-    // {
-    //     // list of AttrCacheEntry (slots 0 to 5)
-    //     attrCatBlock.getRecord(attrCatRecord, i);
+    // read slots 12-15 from attrCatBlock and initialise recId appropriately
+    for (int i = 12; i < 16; i++)
+    {
+        // list of AttrCacheEntry (slots 0 to 5)
+        attrCatBlock.getRecord(attrCatRecord, i);
 
-    //     // for each of the entries, set
-    //     AttrCacheTable::recordToAttrCatEntry(attrCatRecord, &temp->attrCatEntry);
-    //     temp->recId.block = ATTRCAT_BLOCK;
-    //     temp->recId.slot = i;
+        // for each of the entries, set
+        AttrCacheTable::recordToAttrCatEntry(attrCatRecord, &temp->attrCatEntry);
+        temp->recId.block = ATTRCAT_BLOCK;
+        temp->recId.slot = i;
 
-    //     if (i < 15)
-    //         temp->next = new AttrCacheEntry;
-    //     else
-    //         temp->next = nullptr;
+        if (i < 15)
+            temp->next = new AttrCacheEntry;
+        else
+            temp->next = nullptr;
 
-    //     temp = temp->next;
-    // }
+        temp = temp->next;
+    }
 
     // set the value at AttrCacheTable::attrCache[2]
     AttrCacheTable::attrCache[2] = attrCacheEntry;

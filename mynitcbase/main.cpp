@@ -152,7 +152,7 @@ void S2Exercise2()
     {
 
       Attribute attrCatRecord[ATTRCAT_NO_ATTRS];
-      attrCatBuffer.getRecord(attrCatRecord, j);
+      //attrCatBuffer.getRecord(attrCatRecord, j);
 
       // declare attrCatRecord and load the attribute catalog entry into it
 
@@ -164,6 +164,7 @@ void S2Exercise2()
         {
           printf("  Batch: %s\n", attrType);
           memcpy(attrCatRecord[ATTRCAT_ATTR_NAME_INDEX].sVal, "Batch", strlen("Batch") + 1);
+          // attrCatBuffer.setRecord(attrCatRecord, j); // need in s2E2
         }
         else
           printf("  %s: %s\n", attrCatRecord[ATTRCAT_ATTR_NAME_INDEX].sVal /* get the attribute name */, attrType);
@@ -178,7 +179,7 @@ void stage3()
   // Note: relId is 0,1 for rel, attr tables respectively
   //(i.e RELCAT_RELID and ATTRCAT_RELID)
 
-  for (int relId = 0; relId < 3; relId++)
+  for (int relId = 0; relId < 2; relId++)
   {
     RelCatEntry RelCatBuf;
     RelCacheTable::getRelCatEntry(relId, &RelCatBuf);
@@ -237,7 +238,7 @@ void S3Exercise()
 int main(int argc, char *argv[])
 {
   /* Initialize the Run Copy of Disk */
-  // Disk disk_run;
+  Disk disk_run;
 
   // stage1();
   //  S1Exercise (buffer);
@@ -248,8 +249,9 @@ int main(int argc, char *argv[])
 
   StaticBuffer buffer;
   OpenRelTable cache;
-  // stage3();
-  S3Exercise();
+  stage3();
+  // S3Exercise();
+  
   // return FrontendInterface::handleFrontend(argc, argv);
   return 0;
 }
